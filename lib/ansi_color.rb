@@ -1,6 +1,7 @@
 $:.push File.dirname(__FILE__)
 require "ansi_color/helpers"
 require "ansi_color/effects"
+require "ansi_color/string"
 require "ansi_color/rainbow"
 
 module AnsiColor
