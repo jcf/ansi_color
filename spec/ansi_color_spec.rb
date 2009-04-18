@@ -1,5 +1,28 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
+describe AnsiColor do
+  describe "wrapping strings" do
+
+    it "returns the original string with no options" do
+      tag = ansi_tag('james')
+      tag.should == 'james'
+    end
+
+    it "red and bold" do
+      tag = ansi_tag('james', :color => :red, :effects => :bold)
+      tag.should == "#{Helpers::E}31;;1mjames#{Helpers::E}0m"
+    end
+
+    it "blue on white blinking" do
+      tag = ansi_tag('james', :color => :blue,
+        :background_color => :white,
+        :effects => :blink)
+      tag.should == "#{Helpers::E}34;;5mjames#{Helpers::E}0m"
+    end
+
+  end
+end
+
 # describe String do
 # 
 #   describe "styles" do

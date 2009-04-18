@@ -1,4 +1,4 @@
-module Color
+module AnsiColor
   class Rainbow
     def initialize
       puts "\n\n== build_open_tag FOREGROUND"

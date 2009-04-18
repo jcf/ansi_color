@@ -1,11 +1,12 @@
-module Color
+module AnsiColor
   class Effects < Array
     def initialize(array)
-      array = array.select { |effect| EFFECTS.include?(effect) }
-      super(array)
+      # This should probably be validated
+      valid_effects = array.select { |effect| EFFECTS.include?(effect) }
+      super(valid_effects)
     end
     def to_codes!
-      self.map! { |code| Color::EFFECTS[code] }.join(';')
+      self.map! { |code| EFFECTS[code] }.join(';')
     end
   end
 end

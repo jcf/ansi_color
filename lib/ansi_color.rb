@@ -3,7 +3,7 @@ require "ansi_color/helpers"
 require "ansi_color/effects"
 require "ansi_color/rainbow"
 
-module Color
+module AnsiColor
   class InvalidColorName < StandardError; end
   class InvalidColorCode < StandardError; end
   class InvalidEffect < StandardError; end
@@ -44,5 +44,11 @@ module Color
 
   BACKGROUND_COLOURS.each do |name, code|
     define_method("#{name}_background") { code }
+  end
+
+  def ansi_tag(string, options={})
+    return string if options.empty?
+    open_tag = Helpers::build_open_tag(options)
+    open_tag + string + Helpers::reset
   end
 end
