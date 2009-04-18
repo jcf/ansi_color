@@ -32,7 +32,6 @@ module AnsiColor
         end
       end
 
-      fg, bg = options[:color], options[:background]
       options.merge!(args)
 
       fg = code_from_name(options[:color]) unless options[:color].nil?
@@ -40,14 +39,12 @@ module AnsiColor
 
       # options.reject! { |key, value| key == :color || key == :background }
 
-      unless options[:effects].nil?
-        if options[:effects].class == Symbol
-          raise InvalidEffect, "#{options[:effects]} is not a valid effect" unless EFFECTS.include?(options[:effects])
-          effects = EFFECTS[options[:effects]]
-        elsif options[:effects].class == Array
-          effects = Effects.new(options[:effects]).to_codes!
+      if effects = options[:effects]
+        effects = Array(effects).flatten
+        if (effects - EFFECTS.keys).empty?
+          effects = Effects.new(effects).to_codes!
         else
-          raise ArgumentError, "when specifying an effect you need to use either a Symbol or an Array of effects"
+          raise InvalidEffect, "The only valid effects are #{EFFECTS.keys.join(', ')}"
         end
       end
 
