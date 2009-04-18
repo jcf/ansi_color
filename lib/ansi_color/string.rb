@@ -1,5 +1,5 @@
 module AnsiColor
-  class String
+  module String
     FOREGROUND_COLORS.each do |name, code|
       define_method name do
         "#{E}#{code}m#{self}#{RESET}"

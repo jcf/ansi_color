@@ -1,7 +1,0 @@
-= ansi_color
-
-Description goes here.
-
-== Copyright
-
-Copyright (c) 2009 James Conroy-Finn. See LICENSE for details.

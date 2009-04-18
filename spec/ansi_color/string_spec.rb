@@ -1,8 +1,10 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-describe "String" do
-  # include AnsiColor::String
+class String
+  include AnsiColor::String
+end
 
+describe String do
   describe "styles" do
     EFFECTS.each do |name, code|
       it "#{name}" do
@@ -11,7 +13,7 @@ describe "String" do
     end
   end
 
-  describe "foreground colours" do
+  describe "foreground colors" do
     FOREGROUND_COLORS.each do |name, code|
       it "#{name}" do
         "test string".send(name).should == "#{E}#{code}mtest string#{RESET}"
@@ -19,7 +21,7 @@ describe "String" do
     end
   end
 
-  describe "background colours" do
+  describe "background colors" do
     BACKGROUND_COLORS.each do |name, code|
       it "#{name}" do
         "test string".send("#{name}_background").should == "#{E}0;#{code}mtest string#{RESET}"
@@ -27,7 +29,7 @@ describe "String" do
     end
   end
 
-  describe "colour on background" do
+  describe "color on background" do
     FOREGROUND_COLORS.each do |fg_name, fg_code|
       BACKGROUND_COLORS.each do |bg_name, bg_code|
         it "#{fg_name} on #{bg_name}" do

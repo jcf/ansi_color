@@ -1,74 +1,61 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
 describe AnsiColor do
-  describe "wrapping strings" do
-
+  describe "print" do
     it "returns the original string with no options" do
-      tag = ansi_tag('james')
-      tag.should == 'james'
+      string = AnsiColor.print('james')
+      string.should == 'james'
     end
 
     it "red and bold" do
-      tag = ansi_tag('james', :color => :red, :effects => :bold)
-      tag.should == "#{Helpers::E}31;1mjames#{Helpers::E}0m"
+      string = AnsiColor.print('james', :color => :red, :effects => :bold)
+      string.should == "#{E}31;1mjames#{E}0m"
     end
 
     it "blue on white blinking" do
-      tag = ansi_tag('james', :color => :blue,
+      tag = AnsiColor.print('james', :color => :blue,
         :background => :white,
         :effects => :blink)
-      tag.should == "#{Helpers::E}34;47;5mjames#{Helpers::E}0m"
+      tag.should == "#{E}34;47;5mjames#{E}0m"
+    end
+  end
+
+  describe "puts" do
+    it "returns the original string with no options" do
+      string = AnsiColor.puts('james')
+      string.should == "james\n"
     end
 
+    it "red and bold" do
+      string = AnsiColor.puts('james', :color => :red, :effects => :bold)
+      string.should == "#{E}31;1mjames#{E}0m\n"
+    end
+
+    it "blue on white blinking" do
+      string = AnsiColor.puts('james', :color => :blue,
+        :background => :white,
+        :effects => :blink)
+      string.should == "#{E}34;47;5mjames#{E}0m\n"
+    end
+  end
+  
+  describe "color codes from names" do
+    FOREGROUND_COLORS.each do |name, code|
+      it "#{name} returns #{code}" do
+        AnsiColor.send(name).should == code
+      end
+    end
+
+    BACKGROUND_COLORS.each do |name, code|
+      it "#{name}_background returns #{code}" do
+        AnsiColor.send("#{name}_background").should == code
+      end
+    end
+
+    EFFECTS.each do |name, code|
+      it "#{name} returns #{code}" do
+        AnsiColor.send("#{name}").should == code
+      end
+    end
   end
 end
-
-# describe String do
-# 
-#   describe "styles" do
-# 
-#     Helpers::EFFECTS.each do |name, code|
-#       it "#{name}" do
-#         "test string".send(name).should == "#{Helpers::E}#{code}mtest string#{Helpers::RESET}"
-#         # puts "#{name}".send(name)
-#       end
-#     end
-# 
-#   end
-# 
-#   describe "foreground colours" do
-# 
-#     Helpers::FOREGROUND_COLOURS.each do |name, code|
-#       it "#{name}" do
-#         "test string".send(name).should == "#{Helpers::E}#{code}mtest string#{Helpers::RESET}"
-#         # puts "#{name}".send(name)
-#       end
-#     end
-# 
-#   end
-# 
-#   describe "background colours" do
-# 
-#     Helpers::BACKGROUND_COLOURS.each do |name, code|
-#       it "#{name}" do
-#         "test string".send("#{name}_background").should == "#{Helpers::E}0;#{code}mtest string#{Helpers::RESET}"
-#         # puts "#{name}_background".send("#{name}_background")
-#       end
-#     end
-# 
-#   end
-# 
-#   describe "colour on background" do
-# 
-#     Helpers::FOREGROUND_COLOURS.each do |fg_name, fg_code|
-#       Helpers::BACKGROUND_COLOURS.each do |bg_name, bg_code|
-#         it "#{fg_name} on #{bg_name}" do
-#           "test string".send("#{fg_name}_on_#{bg_name}").should == "#{Helpers::E}#{fg_code};#{bg_code}mtest string#{Helpers::RESET}"
-#           # puts "#{fg_name}_on_#{bg_name}".send("#{fg_name}_on_#{bg_name}")
-#         end
-#       end
-#     end
-# 
-#   end
-# 
-# end

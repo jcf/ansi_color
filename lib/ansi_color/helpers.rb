@@ -1,19 +1,19 @@
 module AnsiColor
   class Helpers
     def self.code_from_name(name)
-      FOREGROUND_COLOURS[name] || raise(InvalidColorName, "#{name} is not a colour")
+      FOREGROUND_COLORS[name] || raise(InvalidColorName, "#{name} is not a colour")
     end
 
     def self.name_from_code(code)
-      FOREGROUND_COLOURS.index(code.to_i) || raise(InvalidColorCode, "#{code} is not a colour code")
+      FOREGROUND_COLORS.index(code.to_i) || raise(InvalidColorCode, "#{code} is not a colour code")
     end
 
     def self.code_from_background_name(name)
-      BACKGROUND_COLOURS[name] || raise(InvalidColorName, "#{name} is not a background colour")
+      BACKGROUND_COLORS[name] || raise(InvalidColorName, "#{name} is not a background colour")
     end
 
     def self.name_from_background_code(code)
-      BACKGROUND_COLOURS.index(code.to_i) || raise(InvalidColorCode, "#{code} is not a background colour code")
+      BACKGROUND_COLORS.index(code.to_i) || raise(InvalidColorCode, "#{code} is not a background colour code")
     end
 
     def self.build_open_tag(args={})
@@ -36,8 +36,6 @@ module AnsiColor
 
       fg = code_from_name(options[:color]) unless options[:color].nil?
       bg = code_from_background_name(options[:background]) unless options[:background].nil?
-
-      # options.reject! { |key, value| key == :color || key == :background }
 
       if effects = options[:effects]
         effects = Array(effects).flatten
