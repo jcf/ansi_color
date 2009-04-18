@@ -1,19 +1,19 @@
 module AnsiColor
   class Helpers
     def self.code_from_name(name)
-      FOREGROUND_COLOURS[name] || raise(InvalidColourName, "#{name} is not a colour")
+      FOREGROUND_COLOURS[name] || raise(InvalidColorName, "#{name} is not a colour")
     end
 
     def self.name_from_code(code)
-      FOREGROUND_COLOURS.index(code.to_i) || raise(InvalidColourCode, "#{code} is not a colour code")
+      FOREGROUND_COLOURS.index(code.to_i) || raise(InvalidColorCode, "#{code} is not a colour code")
     end
 
     def self.code_from_background_name(name)
-      BACKGROUND_COLOURS[name] || raise(InvalidColourName, "#{name} is not a background colour")
+      BACKGROUND_COLOURS[name] || raise(InvalidColorName, "#{name} is not a background colour")
     end
 
     def self.name_from_background_code(code)
-      BACKGROUND_COLOURS.index(code.to_i) || raise(InvalidBackgroundColourCode, "#{code} is not a background colour code")
+      BACKGROUND_COLOURS.index(code.to_i) || raise(InvalidColorCode, "#{code} is not a background colour code")
     end
 
     def self.build_open_tag(args={})
@@ -24,6 +24,14 @@ module AnsiColor
         :background => nil,
         :effects => nil
       }
+
+      args.each do |k, v|
+        unless options.keys.include?(k)
+          valid_options = options.keys.join(', ')
+          raise ArgumentError, "#{k} is not a valid argument. Valid options are #{valid_options}"
+        end
+      end
+
       fg, bg = options[:color], options[:background]
       options.merge!(args)
 
@@ -43,17 +51,7 @@ module AnsiColor
         end
       end
 
-      if options[:effects].nil? && options[:background].nil?
-        tag = fg.to_s
-      elsif options[:effects].nil? && options[:color].nil?
-        tag = [0, bg].join(';')
-      elsif options[:color].nil? && options[:background].nil?
-        tag = [0, 0, effects].join(';')
-      elsif options[:effects].nil?
-        tag = [fg, bg].join(';')
-      else
-        tag = [fg, bg, effects].join(';')
-      end
+      tag = [fg || 0, bg, effects].compact.join(';')
       "#{E + tag}m"
     end
 

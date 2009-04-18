@@ -10,14 +10,14 @@ describe AnsiColor do
 
     it "red and bold" do
       tag = ansi_tag('james', :color => :red, :effects => :bold)
-      tag.should == "#{Helpers::E}31;;1mjames#{Helpers::E}0m"
+      tag.should == "#{Helpers::E}31;1mjames#{Helpers::E}0m"
     end
 
     it "blue on white blinking" do
       tag = ansi_tag('james', :color => :blue,
-        :background_color => :white,
+        :background => :white,
         :effects => :blink)
-      tag.should == "#{Helpers::E}34;;5mjames#{Helpers::E}0m"
+      tag.should == "#{Helpers::E}34;47;5mjames#{Helpers::E}0m"
     end
 
   end

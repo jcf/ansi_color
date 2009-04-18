@@ -2,9 +2,40 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Helpers do
 
-  class InvalidColorName < StandardError; end
-  class InvalidColorCode < StandardError; end
-  class InvalidEffect < StandardError; end
+  describe "handling arguments" do
+
+    it "shouldn't accept invalid options" do
+      lambda {
+        Helpers.build_open_tag(:invalid_key => 'something')
+      }.should raise_error(ArgumentError)
+      # raise ArgumentError, "#{k} is not a valid argument. Valid options are #{valid_options}"
+    end
+
+    it "shouldn't error with valid options" do
+      lambda {
+        Helpers.build_open_tag(:color => 'color',
+          :background => 'background',
+          :effects => 'effects')
+      }.should_not raise_error(ArgumentError)
+    end
+
+    it "returns when build_open_tag is called with no args" do
+      Helpers.build_open_tag.should be_nil
+    end
+
+    it "raises an InvalidEffect when effect is invalid" do
+      lambda {
+        Helpers.build_open_tag(:effects => :rubbish)
+      }.should raise_error(InvalidEffect)
+    end
+
+    it "raises an InvalidColorName when effect is invalid" do
+      lambda {
+        Helpers.build_open_tag(:color => 'invalid')
+      }.should raise_error(InvalidColorName)
+    end
+
+  end
 
   describe "should build tags" do
 
@@ -29,25 +60,11 @@ describe Helpers do
     end
 
     it "takes a symbol as an effect" do
-      Helpers.build_open_tag(:effects => :bold).should == "#{Helpers::E}0;0;1m"
+      Helpers.build_open_tag(:effects => :bold).should == "#{Helpers::E}0;1m"
     end
 
     it "takes an array of effects" do
-      Helpers.build_open_tag(:effects => [:bold, :blink]).should == "#{Helpers::E}0;0;1;5m"
-    end
-
-    describe "handling arguments" do
-
-      it "returns when build_open_tag is called with no args" do
-        Helpers.build_open_tag.should be_nil
-      end
-
-      it "raises an InvalidEffect when effect is invalid" do
-        lambda {
-          Helpers.build_open_tag(:effects => :rubbish)
-        }.should raise_error(Helpers::InvalidEffect)
-      end
-
+      Helpers.build_open_tag(:effects => [:bold, :blink]).should == "#{Helpers::E}0;1;5m"
     end
 
   end
@@ -69,29 +86,53 @@ describe Helpers do
   end
 
   describe "finds colour codes from names" do
-    
+
+    it "should raise an InvalidColorName when color name does not exist" do
+      lambda {
+        Helpers.code_from_name('invalid')
+      }.should raise_error(InvalidColorName)
+    end
+
+    it "should raise an InvalidColorName when color name does not exist" do
+      lambda {
+        Helpers.code_from_background_name('invalid')
+      }.should raise_error(InvalidColorName)
+    end
+
     Helpers::FOREGROUND_COLOURS.each do |name, code|
       it "code_from_name(:#{name}) returns #{code}" do
         Helpers.code_from_name(name).should == code
       end
     end
-    
+
     Helpers::BACKGROUND_COLOURS.each do |name, code|
       it "code_from_background_name(:#{name}) returns #{code}" do
         Helpers.code_from_background_name(name).should == code
       end
     end
-    
+
   end
 
   describe "finds colour codes from names" do
-    
+
+    it "should raise an InvalidColorCode when color name does not exist" do
+      lambda {
+        Helpers.name_from_code('invalid')
+      }.should raise_error(InvalidColorCode)
+    end
+
+    it "should raise an InvalidColorCode when background color name does not exist" do
+      lambda {
+        Helpers.name_from_background_code('invalid')
+      }.should raise_error(InvalidColorCode)
+    end
+
     Helpers::FOREGROUND_COLOURS.each do |name, code|
       it "name_from_code(#{code}) returns #{name}" do
         Helpers.name_from_code(code).should == name
       end
     end
-    
+
     Helpers::BACKGROUND_COLOURS.each do |name, code|
       it "name_from_background_code(#{code}) returns #{name}" do
         Helpers.name_from_background_code(code).should == name
